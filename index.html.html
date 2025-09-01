@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Conceptos de Cálculo a través de nuestras carreras anheladas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      text-align: center;
+      background: black;
+      scroll-behavior: smooth;
+    }
+    canvas#fondo {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      z-index:-1;
+    }
+    header {
+      padding: 50px 20px;
+      background: rgba(0,0,0,0.6);
+      animation: fadeIn 2s ease-in;
+    }
+    h1 { font-size: 3em; color:#00e6e6; text-shadow:0 0 20px #00e6e6; }
+    .carreras {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin: 40px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.3);
+      transition: transform 0.4s, box-shadow 0.4s;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .card:hover { transform: scale(1.1) rotate(-1deg); box-shadow: 0 0 35px rgba(0,255,255,0.7); }
+    .card i { font-size: 45px; margin-bottom: 12px; color:#00ffcc; }
+    h2 { color:#00ffcc; margin-bottom: 12px; }
+    .miniChart { width:100%; height:120px; margin-top:10px; }
+    .contenido {
+      display:none;
+      background: rgba(0,0,0,0.75);
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 20px;
+      max-width: 750px;
+      text-align: left;
+      animation: fadeIn 1s ease-in;
+    }
+    .contenido canvas { margin-top:15px; border-radius:10px; background:white; }
+    #comparativo { margin-top:50px; }
+    footer { margin-top:40px; padding:20px; font-size:14px; background: rgba(0,0,0,0.3); }
+    #topBtn {
+      display:none;
+      position:fixed;
+      bottom:30px; right:30px;
+      font-size:22px;
+      background:#00e6e6;
+      color:black;
+      border:none;
+      padding:12px 15px;
+      border-radius:50%;
+      cursor:pointer;
+      box-shadow:0 0 15px #00e6e6;
+      z-index:10;
+    }
+    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+    @media(max-width:900px){ .carreras{flex-direction:column; align-items:center;} }
+  </style>
+</head>
+<body>
+
+<canvas id="fondo"></canvas>
+
+<header>
+  <h1>CONCEPTOS DE CÁLCULO A TRAVÉS DE NUESTRAS CARRERAS ANHELADAS</h1>
+  <p>Explora Licenciatura, Psicología y Medicina de forma interactiva</p>
+</header>
+
+<section class="carreras">
+  <div class="card" onclick="mostrar('licenciatura')">
+    <i class="fas fa-book"></i>
+    <h2>Licenciatura</h2>
+    <p>Previsualización del cálculo en educación</p>
+    <canvas id="miniLicenciatura" class="miniChart"></canvas>
+  </div>
+  <div class="card" onclick="mostrar('psicologia')">
+    <i class="fas fa-brain"></i>
+    <h2>Psicología</h2>
+    <p>Previsualización del cálculo en procesos mentales</p>
+    <canvas id="miniPsicologia" class="miniChart"></canvas>
+  </div>
+  <div class="card" onclick="mostrar('medicina')">
+    <i class="fas fa-stethoscope"></i>
+    <h2>Medicina</h2>
+    <p>Previsualización del cálculo en salud</p>
+    <canvas id="miniMedicina" class="miniChart"></canvas>
+  </div>
+</section>
+
+<!-- Secciones con gráficos completos -->
+<section id="licenciatura" class="contenido">
+  <h2>Licenciatura</h2>
+  <p>Análisis y proyección de rendimiento académico en educación.</p>
+  <canvas id="chartLicenciatura"></canvas>
+</section>
+
+<section id="psicologia" class="contenido">
+  <h2>Psicología</h2>
+  <p>Interpretación de la mente y comportamiento humano con cálculo.</p>
+  <canvas id="chartPsicologia"></canvas>
+</section>
+
+<section id="medicina" class="contenido">
+  <h2>Medicina</h2>
+  <p>Diagnóstico y recuperación usando cálculo preciso.</p>
+  <canvas id="chartMedicina"></canvas>
+</section>
+
+<section id="comparativo" class="contenido">
+  <h2>Comparativo de Aplicación de Cálculo</h2>
+  <p>Visualiza la relevancia del cálculo en todas las carreras.</p>
+  <canvas id="chartComparativo"></canvas>
+</section>
+
+<footer>
+  <p>Autoras: Alejandra, Cristina y Gabriela</p>
+</footer>
+
+<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+  // Fondo estrellado
+  const canvasF = document.getElementById('fondo');
+  const ctxF = canvasF.getContext('2d');
+  let stars=[];
+  function resizeCanvas(){ canvasF.width=window.innerWidth; canvasF.height=window.innerHeight; }
+  window.addEventListener('resize',resizeCanvas);
+  resizeCanvas();
+  for(let i=0;i<200;i++){ stars.push({x:Math.random()*canvasF.width,y:Math.random()*canvasF.height,size:Math.random()*2,speed:Math.random()*0.5+0.2}); }
+  function animate(){
+    ctxF.fillStyle='black';
+    ctxF.fillRect(0,0,canvasF.width,canvasF.height);
+    ctxF.fillStyle='white';
+    stars.forEach(star=>{
+      ctxF.beginPath();
+      ctxF.arc(star.x,star.y,star.size,0,Math.PI*2);
+      ctxF.fill();
+      star.y+=star.speed;
+      if(star.y>canvasF.height){ star.y=0; star.x=Math.random()*canvasF.width; }
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Mostrar sección
+  function mostrar(carrera){
+    document.querySelectorAll('.contenido').forEach(div=>div.style.display='none');
+    document.getElementById(carrera).style.display='block';
+    document.getElementById('topBtn').style.display='block';
+    window.scrollTo({top:document.getElementById(carrera).offsetTop-20,behavior:'smooth'});
+  }
+
+  // Mini gráficos
+  new Chart(document.getElementById('miniLicenciatura'),{ type:'bar', data:{ labels:['Mat','Est','Fis','Edu'], datasets:[{data:[80,70,60,90], backgroundColor:'rgba(0,230,230,0.6)'}] }, options:{responsive:true, plugins:{legend:{display:false}, tooltip:{enabled:true}}, scales:{y:{display:false}}} });
+  new Chart(document.getElementById('miniPsicologia'),{ type:'line', data:{ labels:['Cog','Emo','Com','Neuro'], datasets:[{data:[60,75,50,80], borderColor:'rgba(0,255,204,1)', fill:false, tension:0.3}] }, options:{responsive:true, plugins:{legend:{display:false}, tooltip:{enabled:true}}, scales:{y:{display:false}}} });
+  new Chart(document.getElementById('miniMedicina'),{ type:'pie', data:{ labels:['Ana','Far','Fis','Bio'], datasets:[{data:[25,25,30,20], backgroundColor:['rgba(0,230,230,0.6)','rgba(0,180,180,0.6)','rgba(0,255,204,0.6)','rgba(0,150,150,0.6)']}] }, options:{responsive:true, plugins:{legend:{display:false}, tooltip:{enabled:true}}} });
+
+  // Gráficos completos
+  new Chart(document.getElementById('chartLicenciatura'),{ type:'bar', data:{ labels:['Matemáticas','Estadística','Física','Educación'], datasets:[{label:'Nivel de cálculo', data:[80,70,60,90], backgroundColor:'rgba(0,230,230,0.6)'}] }, options:{responsive:true, scales:{y:{beginAtZero:true,max:100}}, plugins:{tooltip:{enabled:true}}} });
+
+  new Chart(document.getElementById('chartPsicologia'),{ type:'line', data:{ labels:['Cognición','Emoción','Comportamiento','Neurociencia'], datasets:[{label:'Aplicación de cálculo', data:[60,75,50,80], fill:false, borderColor:'rgba(0,255,204,1)', tension:0.3}] }, options:{responsive:true, scales:{y:{beginAtZero:true,max:100}}, plugins:{tooltip:{enabled:true}}} });
+
+  new Chart(document.getElementById('chartMedicina'),{ type:'pie', data:{ labels:['Anatomía','Farmacología','Fisiología','Bioestadística'], datasets:[{label:'Uso de cálculo', data:[25,25,30,20], backgroundColor:['rgba(0,230,230,0.6)','rgba(0,180,180,0.6)','rgba(0,255,204,0.6)','rgba(0,150,150,0.6)']}] }, options:{responsive:true, plugins:{tooltip:{enabled:true}}} });
+
+  new Chart(document.getElementById('chartComparativo'),{ type:'bar', data:{ labels:['Licenciatura','Psicología','Medicina'], datasets:[{label:'Matemáticas', data:[80,60,25], backgroundColor:'rgba(0,230,230,0.6)'},{label:'Estadística', data:[70,75,25], backgroundColor:'rgba(0,180,180,0.6)'},{label:'Física/Bio', data:[60,50,30], backgroundColor:'rgba(0,255,204,0.6)'}] }, options:{responsive:true, scales:{y:{beginAtZero:true,max:100}}, plugins:{tooltip:{enabled:true}}} });
+
+  // Botón arriba
+  window.onscroll=function(){
+    document.getElementById('topBtn').style.display = (document.documentElement.scrollTop>300)?'block':'none';
+  }
+</script>
+
+</body>
+</html>
